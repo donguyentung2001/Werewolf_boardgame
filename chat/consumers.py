@@ -34,7 +34,7 @@ class ChatConsumer(WebsocketConsumer):
         removed_user="%"+current_username
         current_group=GroupChat.objects.filter(name=self.room_name).first() 
         start=current_group.users_list.find(removed_user) 
-        current_group.users_list=current_group.users_list[0:start] + current_group.users_list[(start+len(removed_user)):len(current_group.users_list)]
+        current_group.users_list=current_group.users_list[0:start] + current_group.users_list[(start+len(removed_user)):]
         current_group.save()
         if len(current_group.users_list)==0: 
             current_group.delete() 
