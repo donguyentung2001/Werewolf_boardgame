@@ -15,7 +15,8 @@
     {{ participants | json_script:"participants"}}
     <div> Participants in the chat: </div>
     {% for participant in participants %}
-        <div> {{ participant }} </div> 
+        <div> {{ participant.username }} </div> 
+        <div> {{ participant.character.role }} </div>
     {%endfor%}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
