@@ -17,10 +17,11 @@
     {% for participant in participants %}
         <div> {{ participant.username }} </div> 
         <div> {{ participant.character.role }} </div>
+        <button id="ready"> Ready to play </button>
     {%endfor%}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const author = JSON.parse(document.getElementById('username').textContent);
+        const author = user.username;
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -55,6 +56,8 @@
             }));
             messageInputDom.value = '';
         };
+
+        const ready= document.getElementById('ready')
     </script>
 </body>
 </html>
