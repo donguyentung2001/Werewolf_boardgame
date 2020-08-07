@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'poll.apps.PollConfig',
     'channels',
     'users.apps.UsersConfig',
     'chat.apps.ChatConfig',
