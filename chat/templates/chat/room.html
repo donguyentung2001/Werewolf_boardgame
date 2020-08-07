@@ -11,7 +11,7 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
-    {{ username|json_script:"username" }}
+    {{ user|json_script:"user" }}
     {{ participants | json_script:"participants"}}
     <div> Participants in the chat: </div>
     {% for participant in participants %}
@@ -20,7 +20,7 @@
     {%endfor%}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const author = JSON.parse(document.getElementById('username').textContent);
+        const author = user.username
 
         const chatSocket = new WebSocket(
             'ws://'
