@@ -10,18 +10,30 @@
     <textarea readonly id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
-    {{ room_name|json_script:"room-name" }}
-    {{ user|json_script:"user" }}
+    {{ room_name | json_script:"room-name" }}
+    {{ request.user.username | json_script:"username" }}
     {{ participants | json_script:"participants"}}
+    {{ werewolf_win | json_script:"werewolf_win"}}
+    {{ villager_win | json_script:"villager_win"}}
     <div> Participants in the chat: </div>
     {% for participant in participants %}
         <div> {{ participant.username }} </div> 
         <div> {{ participant.character.role }} </div>
+        <div> {{ participant.character.death }} </div>
     {%endfor%}
+    {% if participants|length == 2 %}
+        {% if werewolf_win == "True" %}
+        <div> Werewolf side has won! </div>
+        {% elif villager_win == "True" %}
+        <div> Human side has won! </div>
+        {% elif request.user.character.role == "werewolf" %}
+            <a href="/chat/{{room_name}}/werewolf"> Werewolf turn! </a>
+        {% endif %}
+    {% endif %}
+
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const author = user.username
-
+        var author = JSON.parse(document.getElementById('username').textContent);
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -55,6 +67,7 @@
             }));
             messageInputDom.value = '';
         };
+
     </script>
 </body>
 </html>
