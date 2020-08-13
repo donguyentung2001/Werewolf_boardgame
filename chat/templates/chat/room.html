@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <title>Chat Room {{ room_name }} </title>
 </head>
-<body>
+<body id="body">
     <div> Welcome to chatroom {{ room_name }} </div>
     <textarea readonly id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
@@ -21,16 +21,18 @@
         <div> {{ participant.character.role }} </div>
         <div> {{ participant.character.death }} </div>
     {%endfor%}
-    {% if participants|length == 2 %}
-        {% if werewolf_win == "True" %}
+    {% if werewolf_win == "True" %}
         <div> Werewolf side has won! </div>
-        {% elif villager_win == "True" %}
+    {% elif villager_win == "True" %}
         <div> Human side has won! </div>
-        {% elif request.user.character.role == "werewolf" %}
-            <a href="/chat/{{room_name}}/werewolf"> Werewolf turn! </a>
-        {% endif %}
+    {% elif request.user.character.role == "werewolf" and participants|length == 2 %}
+        <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> Werewolf turn! </a>
     {% endif %}
-
+    {% if werewolf_win == "True" or villager_win == "True" %} 
+        <a href="/chat/"> Go back to find new games!</a>
+    {% endif %}
+    <div id="turn"> </div>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
         var author = JSON.parse(document.getElementById('username').textContent);
@@ -67,7 +69,22 @@
             }));
             messageInputDom.value = '';
         };
-
+        var url_check_turn = "/chat/" + roomName + "/check_turn/"
+        setInterval(function()
+        { $.ajax({
+        url: url_check_turn,
+        type: 'GET', 
+        success: function(data) {
+            if (data == "werewolf") { 
+                console.log("werewolf turn now")
+                window.location='/chat/'
+            } 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            alert("something went wrong")
+        }
+        }); 
+        }, 1000);
     </script>
 </body>
 </html>
