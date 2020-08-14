@@ -1,0 +1,33 @@
+<body> 
+{{ room_name | json_script:"room-name" }}
+<div> It's werewolves' turn right now. </div> 
+<div> You'll be redirected to the common room as soon as werewolves finish their turn! </div>
+</body>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script> 
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    var url_check_turn = "/chat/" + roomName + "/check_turn/"
+    var url_chatroom = "/chat/" + roomName + "/"
+    var url_werewolf_win = "/chat/" + roomName + "/werewolf_win/"
+    var url_villager_win = "/chat/" + roomName + "/villager_win/"
+    setInterval(function()
+            { $.ajax({
+            url: url_check_turn,
+            type: 'GET', 
+            success: function(data) {
+                if (data == "villager") { 
+                    window.location= url_chatroom
+                } 
+                if (data == "werewolf_win") { 
+                    window.location=url_werewolf_win
+                }
+                if (data == "villager_win") { 
+                    window.location=url_villager_win
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("something went wrong")
+            }
+            }); 
+            }, 1000);
+</script>

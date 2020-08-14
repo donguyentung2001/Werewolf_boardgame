@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from .models import GroupChat, Choice
+from .models import GroupChat, Choice, Game
 from .serializers import UserSerializer, ChoiceSerializer
 from django.contrib.auth.models import User
 import random 
@@ -8,11 +8,16 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 @login_required
 def index(request):
+    request.user.character.death="alive"
+    request.user.character.role=""
+    request.user.character.save()
     return render(request, 'chat/index.html')
 
 @login_required
 def room(request, room_name):
-   roles=['werewolf','villager','villager','villager']
+   if Game.objects.filter(name=room_name).count()==0: 
+       current_game = Game.objects.create(name=room_name)
+   roles=['werewolf','villager']
    if GroupChat.objects.filter(name=room_name).count()!=0:
        participants=GroupChat.objects.filter(name=room_name).first().users_list[1:]
        participants=participants.split(sep="%")
@@ -33,31 +38,18 @@ def room(request, room_name):
            request.user.character.role=random.choice(roles)
            request.user.character.save()
        real_participants.append(UserSerializer(request.user).data)
-   werewolf_win="False" 
-   villager_win="False" 
-   werewolf_lives=0 
-   villager_lives=0
-   if len(real_participants)==2:
-        for real_participant in real_participants: 
-            if real_participant['character']['role']=="werewolf" and real_participant['character']['death']=="alive": 
-                    werewolf_lives+=1
-            elif real_participant['character']['role']!="werewolf" and real_participant['character']['death']=="alive": 
-                    villager_lives+=1 
-        if villager_lives<werewolf_lives: 
-            werewolf_win="True"
-        elif werewolf_lives==0: 
-            villager_win="True" 
    return render(request, 'chat/room.html', {
        'room_name': room_name,
        "user": UserSerializer(request.user).data,
        "participants": real_participants, 
-       "werewolf_win": werewolf_win, 
-       "villager_win": villager_win
    })
 
 @login_required
 def werewolf_turn(request,room_name):
     if request.method=="POST": 
+        current_game=Game.objects.filter(name=room_name).first() 
+        current_game.turn="villager"
+        current_game.save()
         url='/chat/' + str(room_name)+ '/'
         choices=request.session['choices']
         selected_option=request.POST['choices'] 
@@ -72,14 +64,20 @@ def werewolf_turn(request,room_name):
             dead_person=User.objects.filter(username=choices['option_one']).first()
             dead_person.character.death="Dead" 
             dead_person.character.save()
+            current_game.villager_num-=1 
+            current_game.save()
         if highest_count==choices['option_two_count']: 
             dead_person=User.objects.filter(username=choices['option_two']).first()
             dead_person.character.death="Dead" 
             dead_person.character.save()
+            current_game.villager_num-=1 
+            current_game.save()
         if highest_count==choices['option_three_count']: 
             dead_person=User.objects.filter(username=choices['option_three']).first()
             dead_person.character.death="Dead" 
             dead_person.character.save()
+            current_game.villager_num-=1 
+            current_game.save()
         return redirect(url)
 
     participants=GroupChat.objects.filter(name=room_name).first().users_list[1:]
@@ -103,8 +101,34 @@ def werewolf_turn(request,room_name):
         count+=1 
     choices = ChoiceSerializer(choices).data
     request.session['choices']=choices
+    current_game=Game.objects.filter(name=room_name).first() 
+    current_game.turn="werewolf"
+    current_game.save()
     return render(request,'chat/werewolf_turn.html', { 
         "room_name": room_name,
         "choices": choices  
     })
 
+@login_required
+def check_turn(request,room_name): 
+    current_game=Game.objects.filter(name=room_name).first()
+    if current_game.villager_num<current_game.werewolf_num: 
+        return HttpResponse("werewolf_win") 
+    if current_game.werewolf_num == 0:
+        return HttpResponse("villager_win")
+    return HttpResponse(current_game.turn)
+
+@login_required
+def waiting_turn(request, room_name): 
+    return render(request,'chat/waiting_turn.html', { 
+        "room_name": room_name
+    })
+
+@login_required
+def werewolf_win(request, room_name): 
+    return render(request, 'chat/werewolf_win.html')
+
+
+@login_required
+def villager_win(request, room_name): 
+    return render(request, 'chat/villager_win.html')

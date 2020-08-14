@@ -17,3 +17,10 @@ class Choice(models.Model):
     option_one_count = models.IntegerField(default=0)
     option_two_count = models.IntegerField(default=0)
     option_three_count = models.IntegerField(default=0)
+
+class Game(models.Model): 
+    name=models.TextField(default="")
+    turn=models.TextField(default="")
+    werewolf_num=models.IntegerField(default=1)
+    villager_num=models.IntegerField(default=1) 
+    

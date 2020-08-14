@@ -13,23 +13,14 @@
     {{ room_name | json_script:"room-name" }}
     {{ request.user.username | json_script:"username" }}
     {{ participants | json_script:"participants"}}
-    {{ werewolf_win | json_script:"werewolf_win"}}
-    {{ villager_win | json_script:"villager_win"}}
     <div> Participants in the chat: </div>
     {% for participant in participants %}
         <div> {{ participant.username }} </div> 
         <div> {{ participant.character.role }} </div>
         <div> {{ participant.character.death }} </div>
     {%endfor%}
-    {% if werewolf_win == "True" %}
-        <div> Werewolf side has won! </div>
-    {% elif villager_win == "True" %}
-        <div> Human side has won! </div>
-    {% elif request.user.character.role == "werewolf" and participants|length == 2 %}
+    {% if request.user.character.role == "werewolf" and participants|length == 2 %}
         <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> Werewolf turn! </a>
-    {% endif %}
-    {% if werewolf_win == "True" or villager_win == "True" %} 
-        <a href="/chat/"> Go back to find new games!</a>
     {% endif %}
     <div id="turn"> </div>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -69,22 +60,30 @@
             }));
             messageInputDom.value = '';
         };
+        var url_werewolf_win = "/chat/" + roomName + "/werewolf_win/"
+        var url_villager_win = "/chat/" + roomName + "/villager_win/"
         var url_check_turn = "/chat/" + roomName + "/check_turn/"
+        var url_waiting_turn= "/chat/" + roomName + "/waiting_turn/"
         setInterval(function()
-        { $.ajax({
-        url: url_check_turn,
-        type: 'GET', 
-        success: function(data) {
-            if (data == "werewolf") { 
-                console.log("werewolf turn now")
-                window.location='/chat/'
-            } 
-        },
-        error: function(jqXHR, textStatus, errorThrown) {
-            alert("something went wrong")
-        }
-        }); 
-        }, 1000);
+            { $.ajax({
+            url: url_check_turn,
+            type: 'GET', 
+            success: function(data) {
+                if (data == "werewolf") { 
+                    window.location= url_waiting_turn
+                } 
+                if (data == "werewolf_win") { 
+                    window.location=url_werewolf_win
+                }
+                if (data == "villager_win") { 
+                    window.location=url_villager_win
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("something went wrong")
+            }
+            }); 
+            }, 1000);
     </script>
 </body>
 </html>
