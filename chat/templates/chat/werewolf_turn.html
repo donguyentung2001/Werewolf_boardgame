@@ -19,16 +19,20 @@
             </div>
         {% endif %}
         {% if choices.option_two != "" %}
+            <div> 
             <label> 
                 <input type="radio" name="choices" value="option2" required>
                 {{ choices.option_two }}
             </label> 
+            </div>
         {% endif %}
         {% if choices.option_three != "" %}
+            <div> 
             <label> 
                 <input type="radio" name="choices" value="option3" required>
-                {{ choice.option_three }}
+                {{ choices.option_three }}
             </label> 
+            </div>  
         {% endif %}
         <div> 
         <button type="submit" class="btn btn-info">

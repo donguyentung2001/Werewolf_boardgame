@@ -1,0 +1,24 @@
+<body> 
+    {{ room_name | json_script:"room-name" }}
+<div> Waiting for other people to vote. You will be redirected to the chatroom once everyone has voted.</div>
+</body>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script> 
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    var url_check_vote = "/chat/" + roomName + "/check_votes/"
+    var url_chat_room="/chat/" + roomName + "/"
+    setInterval(function()
+            { $.ajax({
+            url: url_check_vote,
+            type: 'GET', 
+            success: function(data) { 
+                if (data == "True") { 
+                    window.location=url_chat_room
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("something went wrong")
+            }
+            }); 
+            }, 1000);
+</script>

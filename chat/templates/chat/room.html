@@ -19,10 +19,12 @@
         <div> {{ participant.character.role }} </div>
         <div> {{ participant.character.death }} </div>
     {%endfor%}
-    {% if request.user.character.role == "werewolf" and participants|length == 2 %}
-        <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> Werewolf turn! </a>
+    {% if request.user.character.role == "werewolf" and participants|length == 4 and request.user.character.death == "alive" %}
+        <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> </a>
     {% endif %}
-    <div id="turn"> </div>
+    {% if request.user.character.death == "alive" %}
+        <a href="/chat/{{room_name}}/villager_turn/" id="villager-turn"> </a>
+    {% endif %}
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
@@ -68,15 +70,23 @@
             { $.ajax({
             url: url_check_turn,
             type: 'GET', 
-            success: function(data) {
-                if (data == "werewolf") { 
-                    window.location= url_waiting_turn
-                } 
+            success: function(data) { 
                 if (data == "werewolf_win") { 
                     window.location=url_werewolf_win
                 }
-                if (data == "villager_win") { 
+                else if (data == "villager_win") { 
                     window.location=url_villager_win
+                }
+                else if (data == "") { 
+                    var werewolf_link=document.getElementById('werewolf-turn')
+                    werewolf_link.innerHTML = "Werewolf turn!";
+                }
+                else if (data == "werewolf") { 
+                    window.location= url_waiting_turn
+                }
+                else if (data == "villager") { 
+                    var villager_link=document.getElementById('villager-turn')
+                    villager_link.innerHTML = "Click here to vote who to execute!";    
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {

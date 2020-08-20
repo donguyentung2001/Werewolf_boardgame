@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>  Villagers' turn </title>
+</head>
+<body> 
+    {{ choices| json_script:"choices" }}
+    <form method="POST"> 
+        {% csrf_token %}
+        <div> Who do you want to execute? </div>
+        {% for choice in choices %}
+            {% if forloop.counter0 == 0 %}
+                <label> 
+                    <input type="radio" name="choices" value= "option0" required>
+                    {{ choice }}
+                </label>
+            {% elif forloop.counter0 == 1 %}
+                <label> 
+                    <input type="radio" name="choices" value= "option1" required>
+                    {{ choice }}
+                </label>
+            {% elif forloop.counter0 == 2 %}
+                <label> 
+                    <input type="radio" name="choices" value= "option2" required>
+                    {{ choice }}
+                </label>
+            {% elif forloop.counter0 == 3 %}
+                <label> 
+                    <input type="radio" name="choices" value= "option3" required>
+                    {{ choice }}
+                </label>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-info">
+            Submit
+        </button>
+
+</body>
