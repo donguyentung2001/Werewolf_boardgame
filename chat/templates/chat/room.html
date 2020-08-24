@@ -1,23 +1,28 @@
+{% load static %}
 <!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
+    <link rel="stylesheet" type="text/css" href ="{% static 'css/room.css' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/werewolf.ico' %}">
     <title>Chat Room {{ room_name }} </title>
+
 </head>
 <body id="body">
-    <div> Welcome to chatroom {{ room_name }} </div>
+    <div> Werewolf room {{ room_name }} </div>
     <textarea readonly id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name | json_script:"room-name" }}
     {{ request.user.username | json_script:"username" }}
     {{ participants | json_script:"participants"}}
-    <div> Participants in the chat: </div>
+    <div> Participants in the game: </div>
     {% for participant in participants %}
-        <div> {{ participant.username }} </div> 
-        <div> {{ participant.character.role }} </div>
-        <div> {{ participant.character.death }} </div>
+        <div> 
+        <span> {{ participant.username }} </span> 
+        <span class="death"> ({{ participant.character.death }}) </span>
+        </div>
     {%endfor%}
     {% if request.user.character.role == "werewolf" and participants|length == 4 and request.user.character.death == "alive" %}
         <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> </a>

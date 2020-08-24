@@ -1,0 +1,49 @@
+html { 
+    margin-top:60px;
+    text-align: center;
+    font-size:25px;
+    font-family:  'Lato', sans-serif;
+    background-image: url("werewolf.jpg");
+    background-repeat: no-repeat;
+    background-position: 550px 200px;
+}
+
+#logout:hover { 
+    font-size:30px;
+    box-shadow: initial;
+    color: green
+}
+
+#logout:link {
+    text-decoration: none;
+    color: green
+}
+
+#logout:visited { 
+    text-decoration: none; 
+    color: green
+}
+
+#room-name-submit { 
+    margin-right: 10px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    width: 180px;
+    height:50px;
+    font-size: 20px;
+    border: 3px solid green;
+    box-shadow:8px 8px green;
+    transition: 0.4s;
+}
+
+#room-name-submit:hover { 
+    font-size:24px; 
+    box-shadow: initial;
+}
+
+#room-name-input { 
+    height: 30px; 
+    width: 300px;
+    font-size:20px;
+    border-color: #2b2b2b;
+}

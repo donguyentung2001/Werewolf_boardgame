@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/chat/static/',
+]
 
 # Application definition
 
@@ -135,3 +139,5 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+STATIC_URL = '/static/'
