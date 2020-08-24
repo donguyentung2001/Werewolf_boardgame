@@ -1,5 +1,8 @@
+<html> 
+{% load static %}
 <head> 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/werewolf.ico' %}">
+    <link rel="stylesheet" type="text/css" href ="{% static 'css/waiting_turn.css' %}">
 </head>
 <body> 
 {{ room_name | json_script:"room-name" }}
@@ -34,3 +37,4 @@
             }); 
             }, 1000);
 </script>
+</html>

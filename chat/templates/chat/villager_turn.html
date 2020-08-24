@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
     <title>  Villagers' turn </title>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/werewolf.ico' %}">
+    <link rel="stylesheet" type="text/css" href ="{% static 'css/villager_turn.css' %}">
 </head>
 <body> 
     {{ choices| json_script:"choices" }}
@@ -33,7 +35,7 @@
                 </label>
             {% endif %}
         {% endfor %}
-        <button type="submit" class="btn btn-info">
+        <button type="submit" class="btn">
             Submit
         </button>
 
