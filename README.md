@@ -1,6 +1,6 @@
 A browser werewolf boardgame, made with Django, HTML, CSS, Javascript.
 
-The current website supports games of 4 people, one person plays the role of werewolf and 3 play the role of villagers. No one knows anyone else's role is. The werewolf and villagers take turn to vote who to kill. Players can communicate through a chat box. 
+The current website supports games of 4 people, one person plays the role of werewolf and 3 play the role of villagers. No one knows anyone else's role is. The werewolf and villagers take turn to vote who to kill. Players can communicate through a chat box. Werewolf wins if the number of villagers is equal to the number of werewolf. Villagers win if the werewolf is dead.
 
 A demonstration of game mechanics: 
 
