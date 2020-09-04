@@ -238,3 +238,19 @@ def wait_vote(request,room_name):
         "room_name": room_name
     })
 
+@login_required 
+def display_participants(request,room_name): 
+    current_game=Game.objects.filter(name=room_name).first().participants
+    participant_list=current_game[1:].split("%")
+    death_list=[]
+    for participant in participant_list: 
+        death_list.append(User.objects.filter(username=participant).first().character.death)
+    response=""
+    for i in range(len(participant_list)): 
+        if response != "": 
+            response+="| "
+        response+=participant_list[i] 
+        response+=" ("
+        response+=death_list[i]
+        response+=") "
+    return HttpResponse(response)

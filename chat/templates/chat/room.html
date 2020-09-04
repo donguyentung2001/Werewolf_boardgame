@@ -18,12 +18,7 @@
     {{ request.user.username | json_script:"username" }}
     {{ participants | json_script:"participants"}}
     <div> Participants in the game: </div>
-    {% for participant in participants %}
-        <div> 
-        <span> {{ participant.username }} </span> 
-        <span class="death"> ({{ participant.character.death }}) </span>
-        </div>
-    {%endfor%}
+    <div id="display_participants">  </div>
     {% if request.user.character.role == "werewolf" and participants|length == 4 and request.user.character.death == "alive" %}
         <a href="/chat/{{room_name}}/werewolf/" id="werewolf-turn"> </a>
     {% endif %}
@@ -71,6 +66,7 @@
         var url_villager_win = "/chat/" + roomName + "/villager_win/"
         var url_check_turn = "/chat/" + roomName + "/check_turn/"
         var url_waiting_turn= "/chat/" + roomName + "/waiting_turn/"
+        var url_participants="/chat/" + roomName + "/display_participants/"
         setInterval(function()
             { $.ajax({
             url: url_check_turn,
@@ -93,6 +89,18 @@
                     var villager_link=document.getElementById('villager-turn')
                     villager_link.innerHTML = "Click here to vote who to execute!";    
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("something went wrong")
+            }
+            }); 
+            }, 1000);
+        setInterval(function()
+            { $.ajax({
+            url: url_participants,
+            type: 'GET', 
+            success: function(data) {          
+                document.getElementById("display_participants").innerHTML=data
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert("something went wrong")
