@@ -6,8 +6,14 @@ The current website supports games of 4 people, one person plays the role of wer
 # How to run on your local machine 
 
 ## Install dependencies 
+```
+pip install -r requirements.txt
+```
 
 ## Run the program 
+```
+python manage.py runserver
+```
 
 # Game Mechanics
 
