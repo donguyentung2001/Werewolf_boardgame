@@ -16,4 +16,4 @@ six==1.4.1
 xattr==0.9.7
 zipp==1.2.0
 psycopg2==2.8.5
-setuptools==1.0
+setuptools==65.5.1
